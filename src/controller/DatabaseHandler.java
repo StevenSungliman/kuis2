@@ -1,4 +1,4 @@
-package kuis2.controller;
+package controller;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,7 @@ public class DatabaseHandler {
     private String driver = "com.mysql.cj.jdbc.Driver";
     private String url = "jdbc:mysql://localhost/kuis2prakpbo";
     private String username = "root";
-    private String password = "";
+    private String password = "1234";
 
     private Connection logOn() {
         try {

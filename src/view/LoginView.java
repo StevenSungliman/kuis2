@@ -1,16 +1,8 @@
-package kuis2.view;
+package view;
 
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,28 +10,20 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import kuis2.controller.DatabaseController;
-import kuis2.model.User;
-import kuis2.model.UserManager;
+import controller.DatabaseController;
+import model.User;
 
 public class LoginView {
     public LoginView(){
-        DatabaseController controller = new DatabaseController();
-        
         JFrame frame = new JFrame();
         frame.setSize(700, 400);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new GridLayout(5, 1));
+        frame.setLayout(new GridLayout(8, 1));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("icon.png"));
-        } catch (IOException ex) {
-            Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ImageIcon icon = new ImageIcon(img);
-        JLabel imgLabel = new JLabel();
-        imgLabel.setIcon(icon);
+        java.net.URL imgUrl = LoginView.class.getResource("icon.png");
+        ImageIcon icon = new ImageIcon(imgUrl);
+        JLabel imgLabel = new JLabel(icon);
         
         JLabel emailLabel = new JLabel("Email");
         JTextField emailField = new JTextField();
@@ -51,9 +35,10 @@ public class LoginView {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                User user = controller.getUserByEmail(emailField.toString());
-                if(user.getEmail() == emailField.toString() && user.getPassword() == passwordField.toString()){
-                    UserManager.getInstance().setUser(user);
+                User user = DatabaseController.getUserByEmail(emailField.getText());
+                if(user.getEmail().equals(emailField.getText()) && user.getPassword().equals(new String(passwordField.getPassword()))){
+                    frame.setVisible(false);
+                    new UpdateProfileView(user.getId());
                 }else {
                     JOptionPane.showMessageDialog(null, "Login Gagal");
                 }

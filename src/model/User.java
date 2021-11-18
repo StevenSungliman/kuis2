@@ -1,4 +1,4 @@
-package kuis2.model;
+package model;
 
 public class User {
     private int id;

@@ -1,28 +1,27 @@
-package kuis2.view;
+package view;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import kuis2.controller.DatabaseController;
-import kuis2.model.CategoryUser;
-import kuis2.model.User;
+import controller.DatabaseController;
+import javax.swing.JOptionPane;
+import model.CategoryUser;
+import model.User;
 
 public class RegistrationView {
     public RegistrationView(){
-        DatabaseController controller = new DatabaseController();
-        
         JFrame frame = new JFrame();
         frame.setSize(700, 400);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new GridLayout(5, 1));
+        frame.setLayout(new GridLayout(20, 1));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         JLabel nameLabel = new JLabel("Nama");
         JTextField nameField = new JTextField();
@@ -33,19 +32,27 @@ public class RegistrationView {
         JLabel passwordLabel = new JLabel("Password");
         JPasswordField passwordField = new JPasswordField();
         
-        ArrayList<CategoryUser> arrCategory = controller.getCategory();
-        JComboBox categoryCombo = new JComboBox(arrCategory.toArray());
+        ArrayList<CategoryUser> arrCategory = DatabaseController.getCategory();
+        ArrayList<String> arrCategoryName = new ArrayList<>();
+        for(int i = 0; i < arrCategory.size(); i++){
+            arrCategoryName.add(arrCategory.get(i).getName());
+        }
+        JComboBox categoryCombo = new JComboBox(arrCategoryName.toArray());
         
         JButton registerButton = new JButton("Register");
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 User user = new User();
-                user.setName(nameField.toString());
-                user.setEmail(emailField.toString());
-                user.setPassword(passwordField.toString());
-                user.setIdCategory(1);
-                controller.addUser(user);
+                user.setName(nameField.getText());
+                user.setEmail(emailField.getText());
+                user.setPassword(new String(passwordField.getPassword()));
+                user.setIdCategory(DatabaseController.getCategoryByName((String)(categoryCombo.getSelectedItem())).getId());
+                if(DatabaseController.addUser(user)){
+                    JOptionPane.showMessageDialog(null, "Registrasi Berhasil");
+                }else{
+                    JOptionPane.showMessageDialog(null, "Registrasi Gagal");
+                }
             }
         });
         

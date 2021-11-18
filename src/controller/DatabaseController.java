@@ -1,16 +1,13 @@
-package kuis2.controller;
+package controller;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import kuis2.model.CategoryUser;
-import kuis2.model.User;
+import model.CategoryUser;
+import model.User;
 
 /**
  *
@@ -27,13 +24,14 @@ public class DatabaseController {
 
     public static boolean addUser(User user) {
         conn.connect();
-        String query = "INSERT INTO user VALUES(?, ?, ?, ?)";
+        String query = "INSERT INTO `user`(`name`, `email`, `password`, `category`) VALUES(?, ?, ?, ?)";
         try {
             PreparedStatement stmt = conn.con.prepareStatement(query);
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getPassword());
             stmt.setInt(4, user.getIdCategory());
+            stmt.executeUpdate();
             return (true);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -156,5 +154,23 @@ public class DatabaseController {
             e.printStackTrace();
         }
         return (categories);
+    }
+    
+    public static CategoryUser getCategoryByName(String name) {
+        conn.connect();
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        String query = "SELECT * FROM category_user WHERE name='" + name + "'";
+        CategoryUser category = new CategoryUser();
+        try {
+            Statement stmt = conn.con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                category.setId(rs.getInt("id"));
+                category.setName(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return (category);
     }
 }

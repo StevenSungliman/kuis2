@@ -1,6 +1,5 @@
-package kuis2.view;
+package view;
 
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +11,8 @@ public class MainMenuView {
         JFrame frame = new JFrame();
         frame.setSize(700, 400);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new GridLayout());
+        frame.setLayout(new GridLayout(20, 1));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         JButton login = new JButton("Login Pengguna");
         login.addActionListener(new ActionListener() {
@@ -24,7 +24,7 @@ public class MainMenuView {
         });
         
         JButton register = new JButton("Registrasi Pengguna Baru");
-        login.addActionListener(new ActionListener() {
+        register.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new RegistrationView();
@@ -33,7 +33,7 @@ public class MainMenuView {
         });
         
         JButton lihat = new JButton("Lihat Data Pengguna Berdasarkan Kategori Dipilih");
-        login.addActionListener(new ActionListener() {
+        lihat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new LihatView();

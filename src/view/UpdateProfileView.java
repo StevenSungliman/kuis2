@@ -1,4 +1,4 @@
-package kuis2.view;
+package view;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -10,21 +10,19 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.table.TableModel;
-import kuis2.controller.DatabaseController;
-import kuis2.model.CategoryUser;
-import kuis2.model.User;
+import controller.DatabaseController;
+import model.CategoryUser;
+import model.User;
 
 public class UpdateProfileView {
-    public UpdateProfileView(){
-        DatabaseController controller = new DatabaseController();
-        
+    public UpdateProfileView(int id){
         JFrame frame = new JFrame();
         frame.setSize(700, 400);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new GridLayout(5, 1));
+        frame.setLayout(new GridLayout(20, 1));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        User user = controller.getUserByID(0);
+        User user = DatabaseController.getUserByID(id);
         
         JLabel nameLabel = new JLabel("Name");
         JTextField nameField = new JTextField(user.getName());
@@ -35,19 +33,24 @@ public class UpdateProfileView {
         JLabel passwordLabel = new JLabel("Password");
         JPasswordField passwordField = new JPasswordField(user.getPassword());
         
-        CategoryUser[] arrCategory = new CategoryUser[1];
-        JComboBox categoryCombo = new JComboBox(arrCategory);
+        ArrayList<CategoryUser> arrCategory = DatabaseController.getCategory();
+        ArrayList<String> arrCategoryName = new ArrayList<>();
+        for(int i = 0; i < arrCategory.size(); i++){
+            arrCategoryName.add(arrCategory.get(i).getName());
+        }
+        JComboBox categoryCombo = new JComboBox(arrCategoryName.toArray());
         
         JButton updateButton = new JButton("Simpan");
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 User user = new User();
-                user.setName(nameField.toString());
-                user.setEmail(emailField.toString());
-                user.setPassword(passwordField.toString());
-                user.setIdCategory(1);
-                controller.updateUser(user);
+                user.setId(id);
+                user.setName(nameField.getText());
+                user.setEmail(emailField.getText());
+                user.setPassword(new String(passwordField.getPassword()));
+                user.setIdCategory(DatabaseController.getCategoryByName((String)(categoryCombo.getSelectedItem())).getId());
+                DatabaseController.updateUser(user);
             }
         });
         
@@ -60,7 +63,7 @@ public class UpdateProfileView {
                 user.setEmail(emailField.toString());
                 user.setPassword(passwordField.toString());
                 user.setIdCategory(1);
-                controller.deleteUser(user);
+                DatabaseController.deleteUser(user.getId());
             }
         });
         
@@ -73,7 +76,7 @@ public class UpdateProfileView {
         frame.add(passwordLabel);
         frame.add(passwordField);
         frame.add(categoryCombo);
-        frame.add(registerButton);
+        frame.add(updateButton);
         frame.add(backButton);
         frame.setVisible(true);
     }
