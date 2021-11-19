@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import controller.DatabaseController;
+import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import model.CategoryUser;
 import model.User;
@@ -21,7 +22,6 @@ public class RegistrationView {
         frame.setSize(700, 400);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new GridLayout(20, 1));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         JLabel nameLabel = new JLabel("Nama");
         JTextField nameField = new JTextField();
@@ -57,6 +57,14 @@ public class RegistrationView {
         });
         
         JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                new MainMenuView();
+            }
+        });
+        
         
         frame.add(nameLabel);
         frame.add(nameField);

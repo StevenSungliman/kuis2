@@ -3,6 +3,7 @@ package view;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -12,14 +13,13 @@ public class MainMenuView {
         frame.setSize(700, 400);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new GridLayout(20, 1));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         JButton login = new JButton("Login Pengguna");
         login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
                 new LoginView();
-                frame.setVisible(false);
             }
         });
         
@@ -27,8 +27,8 @@ public class MainMenuView {
         register.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
                 new RegistrationView();
-                frame.setVisible(false);
             }
         });
         
@@ -36,8 +36,8 @@ public class MainMenuView {
         lihat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
                 new LihatView();
-                frame.setVisible(false);
             }
         });
         

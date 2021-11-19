@@ -11,18 +11,19 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import controller.DatabaseController;
+import java.awt.event.WindowEvent;
 import model.CategoryUser;
 import model.User;
+import model.UserManager;
 
 public class UpdateProfileView {
-    public UpdateProfileView(int id){
+    public UpdateProfileView(){
         JFrame frame = new JFrame();
         frame.setSize(700, 400);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new GridLayout(20, 1));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        User user = DatabaseController.getUserByID(id);
+        User user = UserManager.getInstance().getUser();
         
         JLabel nameLabel = new JLabel("Name");
         JTextField nameField = new JTextField(user.getName());
@@ -45,7 +46,7 @@ public class UpdateProfileView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 User user = new User();
-                user.setId(id);
+                user.setId(user.getId());
                 user.setName(nameField.getText());
                 user.setEmail(emailField.getText());
                 user.setPassword(new String(passwordField.getPassword()));
@@ -68,6 +69,14 @@ public class UpdateProfileView {
         });
         
         JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                new MainMenuView();
+            }
+        });
+        
         
         frame.add(nameLabel);
         frame.add(nameField);

@@ -11,7 +11,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import controller.DatabaseController;
+import java.awt.event.WindowEvent;
 import model.User;
+import model.UserManager;
 
 public class LoginView {
     public LoginView(){
@@ -19,7 +21,6 @@ public class LoginView {
         frame.setSize(700, 400);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new GridLayout(8, 1));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         java.net.URL imgUrl = LoginView.class.getResource("icon.png");
         ImageIcon icon = new ImageIcon(imgUrl);
@@ -37,8 +38,9 @@ public class LoginView {
             public void actionPerformed(ActionEvent e) {
                 User user = DatabaseController.getUserByEmail(emailField.getText());
                 if(user.getEmail().equals(emailField.getText()) && user.getPassword().equals(new String(passwordField.getPassword()))){
-                    frame.setVisible(false);
-                    new UpdateProfileView(user.getId());
+                    UserManager.getInstance().setUser(user);
+                    frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                    new UserMenuView();
                 }else {
                     JOptionPane.showMessageDialog(null, "Login Gagal");
                 }
@@ -49,7 +51,8 @@ public class LoginView {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                new MainMenuView();
             }
         });
         

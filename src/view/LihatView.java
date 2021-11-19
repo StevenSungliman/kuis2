@@ -21,7 +21,6 @@ public class LihatView {
         frame.setLocationRelativeTo(null);
         frame.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         ArrayList<CategoryUser> arrCategory = DatabaseController.getCategory();
         ArrayList<String> arrCategoryName = new ArrayList<>();
