@@ -12,6 +12,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import controller.DatabaseController;
 import java.awt.event.WindowEvent;
+import javax.swing.JOptionPane;
 import model.CategoryUser;
 import model.User;
 import model.UserManager;
@@ -23,16 +24,16 @@ public class UpdateProfileView {
         frame.setLocationRelativeTo(null);
         frame.setLayout(new GridLayout(20, 1));
         
-        User user = UserManager.getInstance().getUser();
+        User usersingleton = UserManager.getInstance().getUser();
         
         JLabel nameLabel = new JLabel("Name");
-        JTextField nameField = new JTextField(user.getName());
+        JTextField nameField = new JTextField(usersingleton.getName());
         
         JLabel emailLabel = new JLabel("Email");
-        JTextField emailField = new JTextField(user.getEmail());
+        JTextField emailField = new JTextField(usersingleton.getEmail());
         
         JLabel passwordLabel = new JLabel("Password");
-        JPasswordField passwordField = new JPasswordField(user.getPassword());
+        JPasswordField passwordField = new JPasswordField(usersingleton.getPassword());
         
         ArrayList<CategoryUser> arrCategory = DatabaseController.getCategory();
         ArrayList<String> arrCategoryName = new ArrayList<>();
@@ -46,12 +47,16 @@ public class UpdateProfileView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 User user = new User();
-                user.setId(user.getId());
+                user.setId(usersingleton.getId());
                 user.setName(nameField.getText());
                 user.setEmail(emailField.getText());
                 user.setPassword(new String(passwordField.getPassword()));
                 user.setIdCategory(DatabaseController.getCategoryByName((String)(categoryCombo.getSelectedItem())).getId());
-                DatabaseController.updateUser(user);
+                if(DatabaseController.updateUser(user)){
+                    JOptionPane.showMessageDialog(null, "Update Berhasil");
+                }else{
+                    JOptionPane.showMessageDialog(null, "Update Gagal");
+                }
             }
         });
         
@@ -60,11 +65,18 @@ public class UpdateProfileView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 User user = new User();
-                user.setName(nameField.toString());
-                user.setEmail(emailField.toString());
-                user.setPassword(passwordField.toString());
-                user.setIdCategory(1);
-                DatabaseController.deleteUser(user.getId());
+                user.setId(usersingleton.getId());
+                user.setName(nameField.getText());
+                user.setEmail(emailField.getText());
+                user.setPassword(new String(passwordField.getPassword()));
+                user.setIdCategory(DatabaseController.getCategoryByName((String)(categoryCombo.getSelectedItem())).getId());
+                if(DatabaseController.deleteUser(user.getId())){
+                    JOptionPane.showMessageDialog(null, "Hapus Berhasil");
+                    frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                    new MainMenuView();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Hapus Gagal");
+                }
             }
         });
         
@@ -86,6 +98,7 @@ public class UpdateProfileView {
         frame.add(passwordField);
         frame.add(categoryCombo);
         frame.add(updateButton);
+        frame.add(deleteButton);
         frame.add(backButton);
         frame.setVisible(true);
     }
